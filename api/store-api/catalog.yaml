@@ -1,0 +1,87 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "catalog"
+  title: "catalog"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/api"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+securityDefinitions:
+  clientIdHeader:
+    type: "apiKey"
+    in: "header"
+    name: "X-IBM-Client-Id"
+security:
+- clientIdHeader: []
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - gatewayscript:
+        title: "gateway-script"
+        version: "1.0.0"
+        source: "var path = apim.getvariable('request.path');\napim.setvariable('real-path', path); "
+    - invoke:
+        target-url: "$(TARGET_HOST)$(real-path)"
+    catch: []
+  phase: "realized"
+  properties:
+    TARGET_HOST:
+      value: 'http://web-bff-vbudiusibmcom.mybluemix.net'
+      description: ""
+      encoded: false
+  catalogs: {}
+paths:
+  /items/{id}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+    parameters:
+    - name: "id"
+      type: "integer"
+      required: true
+      in: "path"
+      format: "int32"
+  /items:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            $ref: "#/definitions/itemArray"
+definitions:
+  itemArray:
+    type: "array"
+    items:
+      $ref: "#/definitions/item"
+  item:
+    properties:
+      stock:
+        type: "integer"
+        format: "int32"
+      img:
+        type: "string"
+      imgAlt:
+        type: "string"
+      price:
+        type: "integer"
+        format: "int32"
+      description:
+        type: "string"
+      name:
+        type: "string"
+      id:
+        type: "integer"
+        format: "int32"
+    additionalProperties: false
+tags: []

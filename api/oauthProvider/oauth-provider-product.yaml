@@ -1,0 +1,28 @@
+---
+product: "1.0.0"
+info:
+  name: "oauth-provider"
+  title: "oauth-provider"
+  version: "1.0.0"
+visibility:
+  view:
+    enabled: true
+    type: "public"
+    tags: []
+    orgs: []
+  subscribe:
+    enabled: true
+    type: "authenticated"
+    tags: []
+    orgs: []
+apis:
+  oauth-provider:
+    $ref: "oauth-provider.yaml"
+plans:
+  default:
+    title: "Default Plan"
+    description: "Default Plan"
+    approval: false
+    rate-limit:
+      hard-limit: false
+      value: "100/hour"

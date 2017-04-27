@@ -1,0 +1,101 @@
+---
+swagger: "2.0"
+info:
+  x-ibm-name: "customer"
+  title: "customer"
+  version: "1.0.0"
+schemes:
+- "https"
+host: "$(catalog.host)"
+basePath: "/api"
+consumes:
+- "application/json"
+produces:
+- "application/json"
+securityDefinitions:
+  apic-oauth-provider:
+    type: "oauth2"
+    description: ""
+    flow: "implicit"
+    authorizationUrl: "https://api.us.apiconnect.ibmcloud.com/vbudiusibmcom-dev/bluecompute-vbudiusibmcom/oauth20/authorize"
+    scopes:
+      blue: "bluecompute scope"
+  clientIdHeader:
+    type: "apiKey"
+    in: "header"
+    name: "X-IBM-Client-Id"
+security:
+- clientIdHeader: []
+  apic-oauth-provider:
+  - "blue"
+x-ibm-configuration:
+  testable: true
+  enforced: true
+  cors:
+    enabled: true
+  assembly:
+    execute:
+    - gatewayscript:
+        title: "gateway-script"
+        version: "1.0.0"
+        source: "var path = apim.getvariable('request.path');\napim.setvariable('real-path', path); "
+    - invoke:
+        target-url: "$(TARGET_HOST)$(real-path)"
+    catch: []
+  phase: "realized"
+  properties:
+    TARGET_HOST:
+      value: "https://web-bff-vbudiusibmcom.mybluemix.net"
+      description: ""
+      encoded: false
+paths:
+  /customer/{id}:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            $ref: "#/definitions/customerObj"
+    parameters:
+    - name: "id"
+      type: "string"
+      required: true
+      in: "path"
+    put:
+      responses:
+        200:
+          description: "200 OK"
+      parameters:
+      - name: "customerObj"
+        required: true
+        in: "body"
+        schema:
+          $ref: "#/definitions/customerObj"
+  /customer:
+    get:
+      responses:
+        200:
+          description: "200 OK"
+          schema:
+            $ref: "#/definitions/customerObj_array"
+definitions:
+  customerObj_array:
+    type: "array"
+    items:
+      $ref: "#/definitions/customerObj"
+  customerObj:
+    properties:
+      imageUrl:
+        type: "string"
+      lastName:
+        type: "string"
+      firstName:
+        type: "string"
+      password:
+        type: "string"
+      username:
+        type: "string"
+      customerId:
+        type: "string"
+    additionalProperties: false
+tags: []

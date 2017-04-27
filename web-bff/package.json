@@ -1,0 +1,22 @@
+{
+  "name": "webbff",
+  "version": "1.0.0",
+  "description": "BFF application that invokes backend microsevices",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js"
+  },
+  "keywords": [
+    "web",
+    "bff"
+  ],
+  "dependencies": {
+    "express": "^4.14.0",
+    "cfenv": "1.0.x",
+    "body-parser": "1.9.x",
+    "bluemix-autoscaling-agent": "*",
+    "chai": "^3.4.1",
+    "mocha": "^2.3.4",
+    "request": "*"
+  }
+}

@@ -1,0 +1,16 @@
+# Server configuration
+server:
+  context-path:
+  port: 8085
+
+# Spring properties
+spring:
+  application:
+     name: auth-microservice
+     cloudant:
+        username: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix
+        password: f4cc3b9bce48f34026238f5bf11bee6933c17677542dcd2bda75c9926edce2a5
+        host: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix.cloudant.com
+        port: 443
+        database: customers
+

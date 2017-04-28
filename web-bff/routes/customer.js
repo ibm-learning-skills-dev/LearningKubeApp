@@ -1,7 +1,7 @@
 module.exports = function(app, request) {
 
 	var resJson = [];
-	var microserviceBaseUrl = "http://catalog-vbudiusibmcom.mybluemix.net/micro";
+	var microserviceBaseUrl = "http://customer-vbudiusibmcom.mybluemix.net/micro";
 
 //	search
 	app.get('/api/customer',function(req, res){
@@ -25,8 +25,14 @@ module.exports = function(app, request) {
 	});
 
 //	search
-	app.get('/api/customer/search',function(req, res){
-		var endPoint = microserviceBaseUrl + '/customer/search';
+	app.use('/api/customer/search',function(req, res){
+		console.log("Customer search ... ");
+		console.log(req.path);
+                var q = req.query;
+                var username = q["username"];
+		console.log(username);
+		var endPoint = microserviceBaseUrl + '/customer/search?username=' + username;
+		console.log(endPoint);
 		request({
 			url: endPoint,
 			method: "GET",
@@ -35,11 +41,14 @@ module.exports = function(app, request) {
             if (0 === body.length) {
                 return res.send({"error":"no customer found"});
             }
+			console.log(body);
 			var bodyJson = JSON.parse(body);
 
 			if (!error && response.statusCode == 200) {
 				return res.json(bodyJson);
 			}else {
+                                console.log("Error: "+response.statusCode);
+                                console.log(body);
 				return res.send({"error":error});
 			}
 		});
@@ -74,6 +83,7 @@ module.exports = function(app, request) {
 	app.post('/api/customer', function (req, res){
 
 		var endPoint = microserviceBaseUrl + '/customer';
+		console.log(req.body);
 		//send request with json payload
 		request({
 			url: endPoint,
@@ -87,6 +97,7 @@ module.exports = function(app, request) {
 			if (!error && response.statusCode == 200) {
 				return res.json(body);
 			} else {
+				console.log("E:"+body);
 				return res.send({"error":error});
 			}
 		});

@@ -62,11 +62,6 @@ app.service('BlueAPIService',['$http', 'CONFIG', function($http, CONFIG) {
 				var requestType = 'GET';
 				invokeService(restUrl, requestType, null, successCallback, errorCallback);
 			},
-			getItemReviewById : function(itemId, successCallback, errorCallback) {
-				var restUrl = 'review/' + itemId;
-				var requestType = 'GET';
-				invokeService(restUrl, requestType, null, successCallback, errorCallback);
-			},
 			loginUser : function(parameters, successCallback, errorCallback) {
 				var restUrl = CONFIG["API-Server"].protocol + '://' + CONFIG["API-Server"].host + '/' + CONFIG["API-Server"].org + '/' + CONFIG["API-Server"].catalog + '/oauth20/token'
 				var requestType = 'POST';

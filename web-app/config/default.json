@@ -24,13 +24,6 @@
         "oauth"
       ]
     },
-    "review": {
-      "base_path": "/api",
-      "require": [
-        "client_id",
-        "oauth"
-      ]
-    },
     "customer": {
       "base_path": "/api",
       "require": [

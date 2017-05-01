@@ -129,7 +129,8 @@ public class CustomerController {
     @RequestMapping(value = "/customer", method = RequestMethod.GET)
     @ResponseBody ResponseEntity<?> getCustomers(@RequestHeader Map<String, String> headers) {
         try {
-        	final String customerId = headers.get("ibm-app-user");
+        	final String customerId = headers.get("Ibm-App-User");
+		System.out.println(headers.toString());
         	if (customerId == null) {
         		// if no user passed in, this is a bad request
         		return ResponseEntity.badRequest().body("Missing header: ibm-app-user");

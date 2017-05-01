@@ -38,14 +38,14 @@ x-ibm-configuration:
     - gatewayscript:
         title: "gateway-script"
         version: "1.0.0"
-        source: "var path = apim.getvariable('request.path');\napim.setvariable('real-path', path); "
+        source: "var path = apim.getvariable('request.path');\napim.setvariable('real-path', path);\nvar uid = apim.getvariable('oauth.resource-owner');\napim.setvariable('message.headers.ibm-app-user', uid)"
     - invoke:
         target-url: "$(TARGET_HOST)$(real-path)"
     catch: []
   phase: "realized"
   properties:
     TARGET_HOST:
-      value: "https://web-bff-vbudiusibmcom.mybluemix.net"
+      value: "http://web-bff-vbudiusibmcom.mybluemix.net"
       description: ""
       encoded: false
 paths:

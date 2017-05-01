@@ -35,7 +35,7 @@ Before you start building your application, there are several steps that you mus
 		bx ic init
 
 - Quota requirement:
-	- 2GB of container space
+	- 2GB of container space (or 1GB container + 1GB shared env for backend)
 	- .75GB of Cloud Foundry space
 	- 3 Bluemix services
 
@@ -96,7 +96,7 @@ The order processing receiving REST calls from external system. It is running as
 		  registry.ng.bluemix.net/$(cf ic namespace get)/backend-${suffix}
 
 
-4. Allocate an IP address for the container
+4. Allocate an IP address for the container (may not needed with secure gateway client)
 
 		bx ic ip-request
 		bx ic ip-bind <ipaddress> backend-${suffix}
@@ -121,7 +121,8 @@ Build the secure gateway environment:
 2. Provision a secure gateway client docker container in Bluemix.
 
 		
-3. Make sure that the secure gateway is active and get the destination mapping information.
+3. Make sure that the secure gateway is active and get the destination mapping information. Create destinations for mysqlIP:3306 and backendIP:8080. Get the destination mappings.
+
  
 
 ## Cloudant NoSQL setup
@@ -172,6 +173,7 @@ Build customer microservice in a container group.
 			-d '{"username": "foo", "password": "bar", "firstName": "foo", "lastName": "bar", "email": "foo@bar.com"}' \
 			-i https://customerservice-${suffix}.mybluemix.net/micro/customer
 		curl http://customer-${suffix}.mybluemix.net/micro/customer/search?username=foo
+		curl -X GET -H "accept: application/json" -H "ibm-app-user: <custid>" http://customer-${suffix}.mybluemix.net/micro/customer
 
 
 ## Catalog microservice setup
@@ -196,7 +198,7 @@ Build catalog microservice in a container group.
 4. Run the application, remember to swap the IP address of the mysql server.
 
 		bx ic group create -p 8081 -m 256  --desired 1 --max 1 --min 1 --auto --name catalog-${suffix} \
-		  -e "spring.datasource.url=jdbc:mysql://169.44.1.95:3306/inventorydb" \
+		  -e "spring.datasource.url=jdbc:mysql://<mysqlIP>:3306/inventorydb" \
 		  -e "spring.datasource.username=dbuser" \
 		  -e "spring.datasource.password=Pass4dbUs3R" \
 		  -n catalog-${suffix} \
@@ -273,7 +275,7 @@ Customize and deploy the Web BFF node.JS application:
 
 ## Authentication application setup
 
-Deploy the authentication application as a container group.
+Deploy the authentication application as a container group. This is necessary as OAuth2 is an authorization tool, __NOT__ an authentication tool. Similar to the API Connect implementation, it is for authorization (ie _Can I access ...?_); not authentication (ie _Are you ...?_) 
 
 1. Change directory to the Authentication application 
 
@@ -301,7 +303,7 @@ Deploy the authentication application as a container group.
 		  -n auth-${suffix} \
 		  -d mybluemix.net registry.ng.bluemix.net/${suffix}/auth-${suffix}
 		
-
+5. Test the authentication application
 
 ## Deploy API Connect and publish API
 
@@ -336,6 +338,18 @@ Deploy the API Connect service and publish the APIs for the oauth and BFF.
 
 5. Modify BlueCompute catalog to enable automatic subscription (to skip developer portal) - this step must be done using Web browser
 
+	1. Login to `http://bluemix.net` 
+	2. In the dashboard, click on `refarch-apiconnect-<suffix>` service
+	3. Click __>>__ and select __Dashboard__
+	4. Click on `BlueCompute-<suffix>` catalog
+	5. Select __Settings__.
+	6. Enable `Development mode` and `Automatic subscription`.
+	7. Click the Save icon. 
+	8. Click __Show__ to display the client ID. 
+
+6. Use the client ID to test application (note that you can only test the catalog application as the other requires oauth authentication):
+
+		curl -H "accept: application/json" -H "X-IBM-Client-id: <clientid>" https://api.us.apiconnect.ibmcloud.com/<orgname>/bluecompute-<suffix>/api/items/13401
 
 	
 ## Deploy Web application
@@ -351,8 +365,13 @@ Deploy web application.
 	- API-Server org: `<org-name>`
 	- API-Server catalog: `bluecompute-<suffix>` 
 
-3. Push the application to Bluemix
+3. Modify manifest.yml and change in the file the name and host parameters into `web-app-<suffix>`:
+
+		cd ..
+		vi manifest.yml
+
+4. Push the application to Bluemix
 
 		bx app push
 
-4. Test the application  
+5. Test the application, go to `http://web-app-<suffix>.mybluemix.net`  

@@ -9,15 +9,15 @@ module.exports = function(app, request) {
 		request({
 			url: endPoint,
 			method: "GET",
-			headers: { 'Authorization': req.get('Authorization') }
+			headers: { 'ibm-app-user': req.get('ibm-app-user') }
 		}, function (error, response, body) {
             if (0 === body.length) {
                 return res.send({"error":"no customer found"});
             }
-			var bodyJson = JSON.parse(body);
+			//var bodyJson = JSON.parse(body);
 
 			if (!error && response.statusCode == 200) {
-				return res.json(bodyJson);
+				return res.json(body);
 			}else {
 				return res.send({"error":error});
 			}

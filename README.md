@@ -53,7 +53,7 @@ The MySQL is built as follows:
 
 3. Run the container in Bluemix:
  
-		bx ic run -m 512 --name mysql -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Pass4Admin123 -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=Pass4dbUs3R -e MYSQL_DATABASE=inventorydb registry.ng.bluemix.net/$(bx ic namespace get)/mysql-${suffix}
+		bx ic run -m 512 --name mysql-${suffix} -p 3306:3306 -e MYSQL_ROOT_PASSWORD=Pass4Admin123 -e MYSQL_USER=dbuser -e MYSQL_PASSWORD=Pass4dbUs3R -e MYSQL_DATABASE=inventorydb registry.ng.bluemix.net/$(bx ic namespace get)/mysql-${suffix}
  
 4. Associate an external IP address for the container (may not be needed with SecureGateway client)
 
@@ -62,11 +62,11 @@ The MySQL is built as follows:
 
 5. Run the load script.
 
-		bx ic exec -t mysql-${suffix} bash
+		bx ic exec -it mysql-${suffix} bash
 
     And run the following:
 
-		mysql -udbuser -p${DBPASS} < load-data.sql
+		mysql -udbuser -p${MYSQL_PASSWORD} < load-data.sql
 		exit
 
 
@@ -89,7 +89,7 @@ The order processing receiving REST calls from external system. It is running as
 
 3. Run the container:
 
-		bx ic run -p 8080 -m 256 \
+		bx ic run -p 8080 -m 256 --name backend-${suffix} \
 		  -e "spring.datasource.url=jdbc:mysql://<mysqlIP>:3306/inventorydb" \
 		  -e "spring.datasource.username=dbuser" \
 		  -e "spring.datasource.password=Pass4dbUs3R" \
@@ -113,16 +113,41 @@ Build the secure gateway environment:
 
 1. Provision Secure Gateway service and define the gateway and destination.
 
-		cf create-service SecureGateway securegatewayplan sginstance
-		authstr=`echo $userid:$password | base64`
-		curl -k -X POST -H "Authorization: Basic $authstr" -H "Content-Type: application/json" -d "{\"desc\":\"IntegrationGateway\", \"enf_tok_sec\":false, \"token_exp\":0}" "https://sgmanager.ng.bluemix.net/v1/sgconfig?org_id=$orgid&space_id=$spaceid"
+		bx service create SecureGateway professional sginstance-${suffix}
 
+2. Define your gateway
+
+	1. Login to www.bluemix.net using your IBM id
+	2. In the services, click on `sginstance-<suffix>`
+	3. Click __Add Gateway__
+	4. Specify IntegrationGateway and uncheck the token 
+	5. Click __Add Destination__
+	6. Select the Advanced option and Specify:
+		- Name: MYSQL
+		- IP address: mysql IP
+		- Port: 3306
+	5. Click __Add Destination__
+	6. Select the Advanced option and Specify:
+		- Name: BACKEND
+		- IP address: backend IP
+		- Port: 8080
+	7. Get the destination mappings
 
 2. Provision a secure gateway client docker container in Bluemix.
 
-		
-3. Make sure that the secure gateway is active and get the destination mapping information. Create destinations for mysqlIP:3306 and backendIP:8080. Get the destination mappings.
+	1. Go to the sgclient path
 
+			cd ~\BobbyCompute\sgclient
+
+	2. Build the docker image
+
+			bx ic build -t registry.ng.bluemix.net/$(bx ic namespace get)/sgclient-${suffix} .
+
+	3. Run the docker image (in a separate window?)
+	
+			bx ic run --name sgclient-${suffix} -it registry.ng.bluemix.net/$(bx ic namespace get)/sgclient-${suffix} --F /tmp/acllist.txt <gateway ID>
+
+	
  
 
 ## Cloudant NoSQL setup
@@ -171,7 +196,7 @@ Build customer microservice in a container group.
 
 		curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" \
 			-d '{"username": "foo", "password": "bar", "firstName": "foo", "lastName": "bar", "email": "foo@bar.com"}' \
-			-i https://customerservice-${suffix}.mybluemix.net/micro/customer
+			-i https://customer-${suffix}.mybluemix.net/micro/customer
 		curl http://customer-${suffix}.mybluemix.net/micro/customer/search?username=foo
 		curl -X GET -H "accept: application/json" -H "ibm-app-user: <custid>" http://customer-${suffix}.mybluemix.net/micro/customer
 

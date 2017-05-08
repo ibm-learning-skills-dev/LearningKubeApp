@@ -43,9 +43,8 @@ dependencies {
     compile("org.springframework:spring-web")
     // end::jetty[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
-    //testCompile("junit:junit")
-    //testCompile("org.springframework.boot:spring-boot-starter-test")
     compile group: 'com.cloudant', name:'cloudant-client', version: '2.7.0'
+    compile('com.nimbusds:nimbus-jose-jwt:4.23')
     testCompile('junit:junit:[4,)')
 }
 

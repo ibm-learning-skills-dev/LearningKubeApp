@@ -7,8 +7,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
+import java.util.Calendar;
 
 import javax.annotation.PostConstruct;
+
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSVerifier;
+import com.nimbusds.jose.crypto.MACVerifier;
+import com.nimbusds.jwt.SignedJWT;
+import org.apache.commons.codec.binary.Base64;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -32,6 +40,7 @@ import com.cloudant.client.api.model.Response;
 import com.cloudant.client.org.lightcouch.NoDocumentException;
 
 import customer.config.CloudantPropertiesBean;
+import customer.config.JWTPropertiesBean;
 import customer.model.Customer;
 
 /**
@@ -47,6 +56,12 @@ public class CustomerController {
     @Autowired
     private CloudantPropertiesBean cloudantProperties;
     
+    @Autowired
+    private JWTPropertiesBean jwtProperties;
+
+    private boolean jwtEnabled;
+    private byte[] secret;
+
     @PostConstruct
     private void init() throws MalformedURLException {
         logger.debug(cloudantProperties.toString());
@@ -80,6 +95,9 @@ public class CustomerController {
             logger.error(e.getMessage(), e);
             throw e;
         }
+		final Base64 base64 = new Base64(true);
+                secret = base64.decode(jwtProperties.getKey());
+                this.jwtEnabled = jwtProperties.getEnabled();
         
 
     }
@@ -87,6 +105,37 @@ public class CustomerController {
     private Database getCloudantDatabase()  {
         return cloudant;
     }
+
+	public String checkJWT(String authHeader) {
+
+		// split the string after the bearer and validate it
+		final String[] arr = authHeader.split("\\s+");
+		final String jwt = arr[1];
+
+		if (jwt.length()==0) return "Invalid authorization header";
+		try {
+			final SignedJWT signedJWT = SignedJWT.parse(jwt);
+			final JWSVerifier verifier = new MACVerifier(secret);
+
+			if (!signedJWT.verify(verifier) ||
+              signedJWT.getJWTClaimsSet().getIssuer() == null || 
+              !signedJWT.getJWTClaimsSet().getIssuer().equals("apic")) {
+				return "Unable to verify JWT token";
+			} else if (signedJWT.getJWTClaimsSet().getExpirationTime() == null ||
+              signedJWT.getJWTClaimsSet().getExpirationTime().before(Calendar.getInstance().getTime())) {
+				return "JWT token expired";
+			} else if (signedJWT.getJWTClaimsSet().getNotBeforeTime() != null &&
+			  signedJWT.getJWTClaimsSet().getNotBeforeTime().after(Calendar.getInstance().getTime())) {
+				return "JWT token invalid";
+			}
+		} catch (Exception e) {
+			return "Invalid JWT token";
+		}
+		
+		return "";
+	}
+    
+
     
     /**
      * check
@@ -129,6 +178,10 @@ public class CustomerController {
     @RequestMapping(value = "/customer", method = RequestMethod.GET)
     @ResponseBody ResponseEntity<?> getCustomers(@RequestHeader Map<String, String> headers) {
         try {
+                if (jwtEnabled) {
+		    String res = checkJWT(headers.get("Authorization"));
+		    if (!res.equals("")) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);
+                }
         	final String customerId = headers.get("Ibm-App-User");
 		System.out.println(headers.toString());
         	if (customerId == null) {

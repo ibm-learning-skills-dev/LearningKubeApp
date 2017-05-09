@@ -176,7 +176,9 @@ public class CustomerController {
      * @return all customer
      */
     @RequestMapping(value = "/customer", method = RequestMethod.GET)
-    @ResponseBody ResponseEntity<?> getCustomers(@RequestHeader Map<String, String> headers) {
+    @ResponseBody ResponseEntity<?> getCustomers(@RequestHeader Map<String, String> hdrs) {
+	Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
+        headers.putAll(hdrs);
         try {
                 if (jwtEnabled) {
 		    String res = checkJWT(headers.get("Authorization"));

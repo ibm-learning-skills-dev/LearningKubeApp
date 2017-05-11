@@ -109,11 +109,11 @@ public class CustomerController {
 	public String checkJWT(String authHeader) {
 
 		// split the string after the bearer and validate it
+		try {
 		final String[] arr = authHeader.split("\\s+");
 		final String jwt = arr[1];
 
 		if (jwt.length()==0) return "Invalid authorization header";
-		try {
 			final SignedJWT signedJWT = SignedJWT.parse(jwt);
 			final JWSVerifier verifier = new MACVerifier(secret);
 
@@ -180,6 +180,7 @@ public class CustomerController {
 	Map<String, String> headers = new TreeMap<String, String>(String.CASE_INSENSITIVE_ORDER);
         headers.putAll(hdrs);
         try {
+		System.out.println(headers);
                 if (jwtEnabled) {
 		    String res = checkJWT(headers.get("Authorization"));
 		    if (!res.equals("")) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(res);

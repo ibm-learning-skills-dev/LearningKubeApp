@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -100,25 +101,19 @@ public class AuthController {
     private ResponseEntity<?> authenticate(String username, String password) {
      	logger.debug("Authenticating: user=" + username + ", password=" + password);
        
-    	// TODO: set signed JWT before calling the customer service?
-    	// call customer service
-    	// final ResponseEntity<List<Customer>> resp = customerService.getCustomerByUsername(username);
         try {
-
                 if (username == null) {
                         return ResponseEntity.badRequest().body("Missing username");
                 }
-
                 final List<Customer> customers = getCloudantDatabase().findByIndex(
                                 "{ \"selector\": { \"username\": \"" + username + "\" } }",
                                 Customer.class);
 
-        if (customers.isEmpty()) {
-                // unknown user
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
+                if (customers.isEmpty()) {
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
 
-        final Customer cust = customers.get(0);
+                final Customer cust = customers.get(0);
 
         // TODO: hash password -- in the customer service
         if (!cust.getPassword().equals(password)) {
@@ -183,9 +178,30 @@ public class AuthController {
      * @return HTTP 200 if success
      */
     @RequestMapping(value = "/authorize", method = RequestMethod.POST)
-    @ResponseBody ResponseEntity<?> postAuthenticate(String username, String password) {
-    	logger.info("POST /authorize, username=" + username + ", password=" + password);
-    	
-    	return authenticate(username, password);
+    @ResponseBody ResponseEntity<?> postAuthenticate(String username, String password, String origURI, String appname) {
+    	logger.info("POST /authorize, username=" + username + ", password=" + password + ", appname="+appname);
+    	logger.info(origURI);
+        try {
+                if (username == null) {
+                        return ResponseEntity.badRequest().body("Missing username");
+                }
+                final List<Customer> customers = getCloudantDatabase().findByIndex(
+                                "{ \"selector\": { \"username\": \"" + username + "\" } }",
+                                Customer.class);
+
+                if (customers.isEmpty()) {
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+                }
+
+                final Customer cust = customers.get(0);
+    	        URI orig = new URI(origURI+"&app-name="+appname+"&username="+cust.getUsername()+"&confirmation="+cust.getPassword());
+                HttpHeaders httpHeaders = new HttpHeaders();
+                httpHeaders.setLocation(orig);
+                return new ResponseEntity<>(httpHeaders, HttpStatus.SEE_OTHER);
+        } catch (Exception e) {
+            logger.error(e.getMessage(), e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    	//return authenticate(username, password);
     }
 }

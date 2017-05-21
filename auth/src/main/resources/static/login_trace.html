@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
+<html>
+   <head>
+      <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+      <script>
+function getQueryVariable(variable) {
+    var query = window.location.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+        var pair = vars[i].split('=');
+        if (decodeURIComponent(pair[0]) == variable) {
+            return decodeURIComponent(pair[1]);
+        }
+    }
+    console.log('Query variable %s not found', variable);
+}
+
+function init() {
+var origurl = getQueryVariable("original-url");
+var appname = getQueryVariable("app-name");
+console.log(origurl);
+console.log(appname);
+document.getElementById("origURI").value=origurl;
+document.getElementById("appname").value=appname;
+}
+      </script>
+    </head>
+    <body style="font-size: 14px" onload="init()">
+        <form method="POST" enctype="application/x-www-form-urlencoded" action="authorize" style="border-radius: 5px;font-family: 'Open Sans', arial;background-color: #f7f7f7;padding: 20px;margin-top:10%;margin-left:2%;margin-right:2%;">
+          <h2 style="text-align: center;">IBM Cloud</h2>
+          <h3 style="text-align: center;">Please sign in</h3>
+            <p>Username</p>
+            <p><input type="text" name="username" required="required" style="width:90%;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;font-size:24px"/></p>
+            <p>Password</p>
+            <p><input type="password" name="password" required="required" style="width:90%;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;font-size:24px"/></p>
+            <p/>
+            <p>Original URL</P>
+<P><input type=text id="origURI" name="origURI" disabled="true" required="required" style="width:90%;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;font-size:14px" />
+            <p>Application name</P>
+<p><input type=text id="appname" name="appname" disabled="true" required="required" style="width:90%;padding: 14px 20px;margin: 8px 0;border: none;border-radius: 4px;font-size:14px"/>
+            <p>
+                <button id="login_button" type="submit" name="login" value="true" style="width:95%;background-color: #4d90fe;color: white;padding: 14px 20px;margin: px 0;border: none;border-radius: 4px;cursor: pointer;font-size:24px">Log in</button>
+            </p>
+        </form>
+      </body>
+   </html>

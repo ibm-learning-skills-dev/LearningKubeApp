@@ -8,9 +8,9 @@ spring:
   application:
      name: auth-microservice
      cloudant:
-        username: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix
-        password: f4cc3b9bce48f34026238f5bf11bee6933c17677542dcd2bda75c9926edce2a5
-        host: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix.cloudant.com
+        username: 14bea0d8-8434-49be-a1db-82d2c4aab312-bluemix
+        password: 4709b1e9f01bbf5b5ed8d691c3908beef20427e5685af9d8a12eec192e16064f
+        host: 14bea0d8-8434-49be-a1db-82d2c4aab312-bluemix.cloudant.com
         port: 443
         database: customers
 

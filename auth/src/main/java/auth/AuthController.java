@@ -99,7 +99,7 @@ public class AuthController {
 
 
     private ResponseEntity<?> authenticate(String username, String password) {
-     	logger.debug("Authenticating: user=" + username + ", password=" + password);
+     	logger.info("Authenticating: user=" + username + ", password=" + password);
        
         try {
                 if (username == null) {
@@ -116,7 +116,9 @@ public class AuthController {
                 final Customer cust = customers.get(0);
 
         // TODO: hash password -- in the customer service
+        logger.info("Get customer:"+cust.getPassword()+":"+password+":");
         if (!cust.getPassword().equals(password)) {
+                logger.info("Password does not match!");
                 // password doesn't match
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
@@ -149,7 +151,6 @@ public class AuthController {
     	
     	// authorization string is like "Basic <base64encoded>"
     	final String creds = authHeader.replace("Basic ", "");
-    	
     	if (creds == null || creds.length() == 0) {
     		return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
     	}

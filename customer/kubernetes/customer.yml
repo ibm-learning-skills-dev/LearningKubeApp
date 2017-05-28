@@ -1,0 +1,45 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer-lightblue-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: pod-customer
+      labels:
+        app: customer
+    spec:
+      containers:
+        - name: customer
+          image: "registry.ng.bluemix.net/vbudiusibmcom/customer:latest"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /var/run/secrets/binding-refarch-cloudantdb
+            name: binding-refarch-cloudantdb
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 60
+      volumes:
+      - name: binding-refarch-cloudantdb
+        secret:
+          defaultMode: 420
+          secretName: "binding-refarch-cloudantdb-vbudiusibmcom"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-lightblue-service
+  labels:
+    app: customer
+spec:
+  type: NodePort
+  selector:
+    app: customer
+  ports:
+   - protocol: TCP
+     port: 8080
+     nodePort: 30110

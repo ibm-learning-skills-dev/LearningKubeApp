@@ -35,7 +35,7 @@ function setGetCustomerOptions(req, res) {
     protocol: _apiServer.protocol,
     host: _apiServer.host,
     api: _apis.customer.base_path,
-    operation: "customer"
+    operation: "customer/search?username=foo"
   });
 
 
@@ -43,7 +43,7 @@ function setGetCustomerOptions(req, res) {
     method: 'GET',
     url: customer_url,
     strictSSL: false,
-    headers: { 'ibm-app-user': "7d1ed7eff039410e9a77d92a30cf0307" }
+    headers: { }
   };
 
   //if (_apis.customer.require.indexOf("client_id") != -1) options.headers["X-IBM-Client-Id"] = _myApp.client_id;
@@ -79,7 +79,7 @@ function sendApiReq(function_input) {
       .then(function (result) {
         console.log("Customer call succeeded with result: " + JSON.stringify(result));
         fulfill({
-          data: result,
+          data: result[0],
           res: res
         });
       })

@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: webbff
-          image: "registry.ng.bluemix.net/vbudiusibmcom/webbff:latest"
+          image: "registry.ng.bluemix.net/<namespace>/webbff:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:

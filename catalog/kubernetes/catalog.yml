@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: "registry.ng.bluemix.net/vbudiusibmcom/catalog:latest"
+          image: "registry.ng.bluemix.net/<namespace>/catalog:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:

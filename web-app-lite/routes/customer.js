@@ -43,7 +43,7 @@ function setGetCustomerOptions(req, res) {
     method: 'GET',
     url: customer_url,
     strictSSL: false,
-    headers: {}
+    headers: { 'ibm-app-user': "7d1ed7eff039410e9a77d92a30cf0307" }
   };
 
   //if (_apis.customer.require.indexOf("client_id") != -1) options.headers["X-IBM-Client-Id"] = _myApp.client_id;

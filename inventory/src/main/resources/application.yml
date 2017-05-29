@@ -1,7 +1,7 @@
 # Server configuration
 server:
   context-path: /micro
-  port: 8080
+  port: 8082
 
 # Spring properties
 spring:
@@ -11,7 +11,7 @@ spring:
   # MySQL Data source configuration
   datasource:
     driverClassName: com.mysql.jdbc.Driver
-    url: jdbc:mysql://169.44.1.95/inventorydb
+    url: jdbc:mysql://mysql-lightblue-service:3306/inventorydb
     username: dbuser
     password: Pass4dbUs3R
     port: 3306

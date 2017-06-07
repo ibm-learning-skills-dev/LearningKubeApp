@@ -1,18 +1,18 @@
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: catalog-lightblue-deployment
+  name: inventory-lightblue-deployment
 spec:
   replicas: 1
   template:
     metadata:
-      name: pod-catalog
+      name: pod-inventory
       labels:
-        app: catalog
+        app: inventory
     spec:
       containers:
-        - name: catalog
-          image: "registry.ng.bluemix.net/<namespace>/catalog:latest"
+        - name: inventory
+          image: "registry.ng.bluemix.net/<namespace>/inventory:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -30,14 +30,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: catalog-lightblue-service
+  name: inventory-lightblue-service
   labels:
-    app: catalog
+    app: inventory
 spec:
   type: NodePort
   selector:
-    app: catalog
+    app: inventory
   ports:
    - protocol: TCP
-     port: 8081
-     nodePort: 30111
+     port: 8085
+     nodePort: 30115

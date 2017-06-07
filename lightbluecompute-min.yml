@@ -1,0 +1,173 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mysql-lightblue-deployment
+  spec:
+    replicas: 1
+    template:
+      metadata:
+        name: pod-mysql
+        labels:
+          app: mysql
+      spec:
+        containers:
+        - name: mysql
+          image: "registry.ng.bluemix.net/<namespace>/mysql"
+          imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 3306
+            initialDelaySeconds: 20
+            periodSeconds: 60
+          env:
+          - name: MYSQL_ROOT_PASSWORD
+            value: "Pass4Admin123"
+          - name: MYSQL_USER
+            value: "dbuser"
+          - name: MYSQL_PASSWORD
+            value: "Pass4dbUs3R"
+          - name: MYSQL_DATABASE
+            value: "inventorydb"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-lightblue-service
+  labels:
+     app: mysql
+spec:
+  type: NodePort
+    selector:
+      app: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+      nodePort: 30006
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: customer-lightblue-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: pod-customer
+      labels:
+        app: customer
+    spec:
+      containers:
+        - name: customer
+          image: "bluemixenablement/lightbluecompute-customer:latest"
+          imagePullPolicy: Always
+          volumeMounts:
+          - mountPath: /var/run/secrets/binding-refarch-cloudantdb
+            name: binding-refarch-cloudantdb
+          livenessProbe:
+            tcpSocket:
+              port: 8080
+            initialDelaySeconds: 20
+            periodSeconds: 60
+      volumes:
+      - name: binding-refarch-cloudantdb
+        secret:
+          defaultMode: 420
+          secretName: "binding-<cloudant-instance>"
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: customer-lightblue-service
+  labels:
+    app: customer
+spec:
+  type: NodePort
+  selector:
+    app: customer
+  ports:
+   - protocol: TCP
+     port: 8080
+     nodePort: 30110
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: catalog-lightblue-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: pod-catalog
+      labels:
+        app: catalog
+    spec:
+      containers:
+        - name: catalog
+          image: "bluemixenablement/lightbluecompute-catalog:latest"
+          imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 8081
+            initialDelaySeconds: 20
+            periodSeconds: 60
+          env:
+          - name: "spring_datasource_url"
+            value: "jdbc:mysql://mysql-lightblue-service:3306/inventorydb" 
+          - name: "spring_datasource_username"
+            value: "dbuser" 
+          - name: "spring_datasource_password"
+            value: "Pass4dbUs3R" 
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalog-lightblue-service
+  labels:
+    app: catalog
+spec:
+  type: NodePort
+  selector:
+    app: catalog
+  ports:
+   - protocol: TCP
+     port: 8081
+     nodePort: 30111
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webbff-lightblue-deployment
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: pod-webbff
+      labels:
+        app: webbff
+    spec:
+      containers:
+        - name: webbff
+          image: "bluemixenablement/lightbluecompute-webbff:latest"
+          imagePullPolicy: Always
+          livenessProbe:
+            tcpSocket:
+              port: 3001
+            initialDelaySeconds: 20
+            periodSeconds: 60
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webbff-lightblue-service
+  labels:
+    app: webbff
+spec:
+  type: NodePort
+  selector:
+    app: webbff
+  ports:
+   - protocol: TCP
+     port: 3001
+     nodePort: 30120

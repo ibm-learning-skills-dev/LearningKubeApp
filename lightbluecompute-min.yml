@@ -2,17 +2,17 @@ apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
   name: mysql-lightblue-deployment
-  spec:
-    replicas: 1
-    template:
-      metadata:
-        name: pod-mysql
-        labels:
-          app: mysql
-      spec:
-        containers:
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: pod-mysql
+      labels:
+        app: mysql
+    spec:
+      containers:
         - name: mysql
-          image: "registry.ng.bluemix.net/<namespace>/mysql"
+          image: "bluemixenablement/lightbluecompute-mysql"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
@@ -34,15 +34,15 @@ kind: Service
 metadata:
   name: mysql-lightblue-service
   labels:
-     app: mysql
+    app: mysql
 spec:
   type: NodePort
-    selector:
-      app: mysql
-    ports:
-    - protocol: TCP
-      port: 3306
-      nodePort: 30006
+  selector:
+    app: mysql
+  ports:
+   - protocol: TCP
+     port: 3306
+     nodePort: 30006
 ---
 apiVersion: extensions/v1beta1
 kind: Deployment
@@ -72,7 +72,7 @@ spec:
       - name: binding-refarch-cloudantdb
         secret:
           defaultMode: 420
-          secretName: "binding-<cloudant-instance>"
+          secretName: "binding-cloudantdb"
 
 ---
 apiVersion: v1

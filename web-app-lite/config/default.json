@@ -12,12 +12,14 @@
   },
   "APIs": {
     "catalog": {
+      "host": "cataloghost",
       "base_path": "/api",
       "require": [
           "client_id"
       ]
     },
     "order": {
+      "host": "orderhost",
       "base_path": "/api",
       "require": [
         "client_id",
@@ -25,6 +27,7 @@
       ]
     },
     "customer": {
+      "host": "customerhost",
       "base_path": "/api",
       "require": [
         "client_id"

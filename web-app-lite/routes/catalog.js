@@ -54,7 +54,7 @@ function setGetItemsOptions(req, res) {
 
   var items_url = api_url.stringify({
     protocol: _apiServer.protocol,
-    host: _apiServer.host,
+    host: _apis.catalog.host,
     api: _apis.catalog.base_path,
     operation: "items"
   });
@@ -107,7 +107,7 @@ function setGetItemOptions(req, res) {
 
   var item_url = api_url.stringify({
     protocol: _apiServer.protocol,
-    host: _apiServer.host,
+    host: _apis.catalog.host,
     api: _apis.catalog.base_path,
     operation: "items/" + params.id
   });

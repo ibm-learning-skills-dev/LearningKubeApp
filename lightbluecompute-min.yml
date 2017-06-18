@@ -137,22 +137,22 @@ spec:
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
-  name: webbff-lightblue-deployment
+  name: webapp-lightblue-deployment
 spec:
   replicas: 1
   template:
     metadata:
-      name: pod-webbff
+      name: pod-webapp
       labels:
-        app: webbff
+        app: webapp
     spec:
       containers:
-        - name: webbff
-          image: "bluemixenablement/lightbluecompute-webbff:latest"
+        - name: webapp
+          image: "bluemixenablement/lightbluecompute-webapp:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:
-              port: 3001
+              port: 8000
             initialDelaySeconds: 20
             periodSeconds: 60
 
@@ -160,14 +160,14 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: webbff-lightblue-service
+  name: webapp-lightblue-service
   labels:
-    app: webbff
+    app: webapp
 spec:
   type: NodePort
   selector:
-    app: webbff
+    app: webapp
   ports:
    - protocol: TCP
-     port: 3001
-     nodePort: 30120
+     port: 8000
+     nodePort: 30220

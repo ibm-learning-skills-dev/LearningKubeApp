@@ -40,4 +40,3 @@ $cfg
 kubectl delete secret binding-cloudantdb
 kubectl delete -f lightbluecompute-min.yml
 
-bx app delete -f lightblue-web-${suffix}

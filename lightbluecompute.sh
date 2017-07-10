@@ -41,11 +41,3 @@ mysql -udbuser -pPass4dbUs3R -h${extIP} -P30006 < mysql/scripts/load-data.sql
 
 curl -X POST -H "Content-Type: application/json" -H "Accept: application/json" -d '{"username": "foo", "password": "bar", "firstName": "foo", "lastName": "bar", "email": "foo@bar.com"}' -i http://${extIP}:30110/micro/customer
 
-cd  web-app-lite
-# edit manifest.yml
-sed -i -e 's/lightblue-web-bmxedu/lightblue-web-'$suffix'/g' manifest.yml
-# 
-# edit config/default.json
-sed -i -e 's/184.172.233.10/'$extIP'/g' config/default.json
-
-bx app push

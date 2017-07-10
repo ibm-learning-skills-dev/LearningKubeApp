@@ -33,7 +33,7 @@ function setGetCustomerOptions(req, res) {
 
   var customer_url = api_url.stringify({
     protocol: _apiServer.protocol,
-    host: _apiServer.host,
+    host: _apis.customer.host,
     api: _apis.customer.base_path,
     operation: "customer/search?username=foo"
   });

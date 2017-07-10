@@ -7,7 +7,7 @@ var oauth = require('../server/js/oauth.js');
 var config = require('config');
 
 var session;
-var api_url = new UrlPattern('(:protocol)\\://(:host)(/:org)(/:cat)(:api)/(:operation)');
+var api_url = new UrlPattern('(:protocol)\\://(:host)(:api)/(:operation)');
 var _myApp = config.get('Application');
 var _apiServer = config.get('API-Server');
 var _apiServerOrg = ((_apiServer.org === "") || (typeof _apiServer.org == 'undefined')) ? undefined : _apiServer.org;
@@ -42,9 +42,7 @@ function setGetOrdersOptions(req, res) {
 
   var orders_url = api_url.stringify({
     protocol: _apiServer.protocol,
-    host: _apiServer.host,
-    org: _apiServerOrg,
-    cat: _apiServerCatalog,
+    host: _apis.order.host,
     api: _apis.order.base_path,
     operation: "orders"
   });
@@ -97,9 +95,7 @@ function setNewOrderOptions(req, res) {
 
   var orders_url = api_url.stringify({
     protocol: _apiServer.protocol,
-    host: _apiServer.host,
-    org: _apiServerOrg,
-    cat: _apiServerCatalog,
+    host: _apis.order.host,
     api: _apis.order.base_path,
     operation: "orders"
   });

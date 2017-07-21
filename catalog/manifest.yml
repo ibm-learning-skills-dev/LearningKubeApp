@@ -1,0 +1,10 @@
+applications:
+- path: build/libs/micro-catalog-0.0.1.war
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  name: catalog-<suffix>
+  host: catalog-<suffix>
+  disk_quota: 1024M
+  services:
+  - mysql-<suffix>

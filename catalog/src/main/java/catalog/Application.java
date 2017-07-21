@@ -9,7 +9,9 @@ import org.springframework.context.ApplicationContext;
 public class Application {
 
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(Application.class, args);
+        SpringApplication appl = new SpringApplication(Application.class);
+        appl.addInitializers(new VcapProcessor());
+        ApplicationContext ctx = appl.run(args);
         System.out.println("Catalog microservice is ready for business...");
     }
 }

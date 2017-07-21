@@ -3,6 +3,9 @@ server:
   context-path: /micro
   port: 8081
 
+vcap:
+  uri:
+
 # Spring properties
 spring:
   application:

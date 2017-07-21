@@ -1,0 +1,10 @@
+applications:
+- path: build/lib/micro-customer-0.0.1.war
+  memory: 512M
+  instances: 1
+  domain: mybluemix.net
+  name: customer-<suffix>
+  host: customer-<suffix>
+  disk_quota: 1024M
+  services:
+  - cloudantdb

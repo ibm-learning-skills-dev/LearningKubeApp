@@ -1,0 +1,29 @@
+# Server configuration
+server:
+  context-path: /micro
+  port: 8080
+vcap:
+  uri: ${vcap.services.mysqldb.credentials.uri}
+# Spring properties
+spring:
+  application:
+     name: catalog-microservice
+
+  # MySQL Data source configuration
+  datasource:
+    driverClassName: com.mysql.jdbc.Driver
+    url: ""
+    username: admin
+    password: ""
+    port: 3306
+    max-active: 4
+    testOnBorrow: true
+    validationQuery: SELECT 1
+
+  jpa:
+    database: MYSQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+      naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+

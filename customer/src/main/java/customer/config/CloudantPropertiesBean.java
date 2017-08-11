@@ -12,6 +12,7 @@ public class CloudantPropertiesBean {
 	private String username;
 	private String password;
 	private String host;
+	private String protocol;
 	private int port;
 	private String database;
 	
@@ -38,6 +39,12 @@ public class CloudantPropertiesBean {
 	}
 	public void setPort(int port) {
 		this.port = port;
+	}
+	public String getProtocol() {
+		return protocol;
+	}
+	public void setProtocol(String protocol) {
+		this.protocol = protocol;
 	}
 	public String getDatabase() {
 		return database;

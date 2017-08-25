@@ -12,5 +12,6 @@ spring:
         username: ${vcap.services.cloudantdb.credentials.username}
         password: ${vcap.services.cloudantdb.credentials.password}
         host: ${vcap.services.cloudantdb.credentials.host}
+        protocol: https
         port: ${vcap.services.cloudantdb.credentials.port}
         database: customers

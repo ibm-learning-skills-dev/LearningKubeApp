@@ -1,3 +1,4 @@
+# Copyright IBM 2017
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -12,7 +13,7 @@ spec:
     spec:
       containers:
         - name: catalog
-          image: "registry.ng.bluemix.net/learningkubens/catalog:latest"
+          image: "registry.<region>.bluemix.net/<namespace>/catalog:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:

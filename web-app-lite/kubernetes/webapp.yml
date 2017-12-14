@@ -12,7 +12,7 @@ spec:
     spec:
       containers:
         - name: webapp
-          image: "registry.ng.bluemix.net/learningkubens/webapp:latest"
+          image: "registry.<region>.bluemix.net/<namespace>/webapp:latest"
           imagePullPolicy: Always
           livenessProbe:
             tcpSocket:

@@ -12,8 +12,8 @@
   },
   "APIs": {
     "catalog": {
-      "host": "cataloghost",
-      "base_path": "/api",
+      "host": "catalog-lightblue-service:8081",
+      "base_path": "/micro",
       "require": [
           "client_id"
       ]
@@ -27,8 +27,8 @@
       ]
     },
     "customer": {
-      "host": "customerhost",
-      "base_path": "/api",
+      "host": "customer-lightblue-service:8080",
+      "base_path": "/micro",
       "require": [
         "client_id"
       ]

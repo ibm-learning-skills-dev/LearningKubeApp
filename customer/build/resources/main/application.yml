@@ -1,0 +1,21 @@
+# Server configuration
+server:
+  context-path: /micro
+  port: 8080
+
+# Spring properties
+spring:
+  application:
+     name: customer-microservice
+     
+     cloudant:
+        username: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix
+        password: f4cc3b9bce48f34026238f5bf11bee6933c17677542dcd2bda75c9926edce2a5
+        host: f0d330b4-5bda-4829-963c-6664a13a8ca9-bluemix.cloudant.com
+        protocol: https
+        port: 443
+        database: customers
+
+jwt:
+  enabled: false
+  key: l6kHLmBzbzdBi8eznmg-nGP3pZihFpLgie0K-SKEUARXzyG5yJ7nnZoFPVL_MvoJckcoRslQZlxsNZpVruKqrP0s-m6YDaKw4Ody8lZbPmQ7wU0Mc1561J01VH55s4apg_TvnOJ6xn8sEfid3gPbvXntIb0hokVtopG5Zaam2wfyMuBlzqhQ42TtL51yZOym5NLad4_WtZUG9kM204K7OgLHFfUABpWD4ocBF7uQrebcO4cwqlVI6N_A_252TdEkfOyh_vG4yxO0h88LxaGSXj0iKFpO4q6md7bFMjzdehtPKiqWktKg02QyAjq-PRcrSiWBZfh2w6JIkU7g8kS5YQ

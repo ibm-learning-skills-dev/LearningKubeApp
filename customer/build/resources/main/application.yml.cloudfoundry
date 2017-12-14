@@ -1,0 +1,17 @@
+# Server configuration
+server:
+  context-path: /micro
+  port: 8080
+
+# Spring properties
+spring:
+  application:
+     name: customer-microservice
+
+     cloudant:
+        username: ${vcap.services.cloudantdb.credentials.username}
+        password: ${vcap.services.cloudantdb.credentials.password}
+        host: ${vcap.services.cloudantdb.credentials.host}
+        protocol: https
+        port: ${vcap.services.cloudantdb.credentials.port}
+        database: customers
